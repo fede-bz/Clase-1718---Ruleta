@@ -1670,9 +1670,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8224175942781090483, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4533348616015166963, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4533348616015166963, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4533348616015166963, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4533348616015166963, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: -4078115012034234657, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
       propertyPath: m_Name
       value: ruleta1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843395163881685106, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8bfc0dcdf0f55c4aa59ebdf101537a7, type: 3}
@@ -2580,6 +2608,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monedaManager: {fileID: 183810101}
   textoResultado: {fileID: 2055794003}
+  sectores:
+  - nombre: Verde
+    anguloInicio: 0
+    anguloFin: 45
+  - nombre: Rojo1
+    anguloInicio: 45.01
+    anguloFin: 90
+  - nombre: Negro1
+    anguloInicio: 90.01
+    anguloFin: 135
+  - nombre: Rojo2
+    anguloInicio: 135.01
+    anguloFin: 180
+  - nombre: Negro2
+    anguloInicio: 180.01
+    anguloFin: 225
+  - nombre: Rojo3
+    anguloInicio: 225.01
+    anguloFin: 270
+  - nombre: Negro3
+    anguloInicio: 270.01
+    anguloFin: 315
+  - nombre: Amarillo
+    anguloInicio: 315
+    anguloFin: 360
   curvas:
   - serializedVersion: 2
     m_Curve:

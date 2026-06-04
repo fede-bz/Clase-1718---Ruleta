@@ -3,15 +3,26 @@ using TMPro;
 
 public class GirarRuleta : MonoBehaviour
 {
+    [System.Serializable]
+    public class Sector
+    {
+        public string nombre;
+        public float anguloInicio;
+        public float anguloFin;
+    }
+
     [Header("Referencias")]
     public MonedaManager monedaManager;
     public TextMeshProUGUI textoResultado;
 
+    [Header("Sectores")]
+    public Sector[] sectores;
+
     [Header("Animacion")]
     public AnimationCurve[] curvas;
-    public float duracionGiro = 3f;
+    public float duracionGiro = 5f;
     public float vueltasMinimas = 3f;
-    public float vueltasExtra = 5f;
+    public float vueltasExtra = 3f;
 
     private bool estaGirando = false;
 
@@ -27,12 +38,9 @@ public class GirarRuleta : MonoBehaviour
         textoResultado.text = "";
 
         AnimationCurve curva = curvas[Random.Range(0, curvas.Length)];
-        int resultado = Random.Range(0, 8);
 
-        float gradosPorSector = 360f / 8f;
-        float rotacionExtra = vueltasMinimas * 360f + vueltasExtra * Random.value * 360f;
-        float rotacionFinal = rotacionExtra + (resultado * gradosPorSector);
-
+        float gradosPorSector = 360f / sectores.Length;
+        float rotacionFinal = vueltasMinimas * 360f + vueltasExtra * Random.value * 360f;
         float rotacionInicial = transform.eulerAngles.y;
         float tiempoTranscurrido = 0f;
 
@@ -49,73 +57,61 @@ public class GirarRuleta : MonoBehaviour
                 transform.eulerAngles.z
             );
 
-            float angulo = rotacionActual % 360f;
-            if (angulo < 0) angulo += 360f;
-            int sectorActual = Mathf.FloorToInt(angulo / gradosPorSector) % 8;
-            textoResultado.text = NombreSector(sectorActual);
+            int sectorActual = ObtenerSector(rotacionActual);
+            if (sectorActual >= 0)
+                textoResultado.text = sectores[sectorActual].nombre;
 
             yield return null;
         }
 
-        AplicarResultado(resultado);
+        int sectorFinal = ObtenerSector(transform.eulerAngles.y);
+        if (sectorFinal >= 0)
+            AplicarResultado(sectorFinal);
+
         estaGirando = false;
     }
 
-    private void AplicarResultado(int resultado)
+    private int ObtenerSector(float rotacion)
     {
-        string mensaje = "";
-        switch (resultado)
+        float angulo = (rotacion + 180f) % 360f;
+        if (angulo < 0) angulo += 360f;
+
+        for (int i = 0; i < sectores.Length; i++)
         {
-            case 0:
-                monedaManager.MultiplicarMonedas(3f);
-                mensaje = "JACKPOT! x3";
-                break;
-            case 1:
-                monedaManager.ModificarMonedas(10);
-                mensaje = "+10 monedas";
-                break;
-            case 2:
-                monedaManager.ModificarMonedas(-10);
-                mensaje = "-10 monedas";
-                break;
-            case 3:
-                monedaManager.ModificarMonedas(25);
-                mensaje = "+25 monedas";
-                break;
-            case 4:
-                monedaManager.ModificarMonedas(-25);
-                mensaje = "-25 monedas";
-                break;
-            case 5:
-                monedaManager.MultiplicarMonedas(2f);
-                mensaje = "x2 monedas!";
-                break;
-            case 6:
-                monedaManager.MultiplicarMonedas(0.5f);
-                mensaje = "÷2 monedas";
-                break;
-            case 7:
-                monedaManager.SetMonedas(0);
-                mensaje = "PERDISTE";
-                break;
+            float ini = sectores[i].anguloInicio;
+            float fin = sectores[i].anguloFin;
+
+            if (ini > fin)
+            {
+                if (angulo >= ini || angulo < fin)
+                    return i;
+            }
+            else
+            {
+                if (angulo >= ini && angulo < fin)
+                    return i;
+            }
         }
-        textoResultado.text = mensaje;
+        return -1;
     }
 
-    private string NombreSector(int sector)
+    private void AplicarResultado(int indice)
     {
-        switch (sector)
+        string mensaje = "";
+
+        switch (indice)
         {
-            case 0: return "JACKPOT x3";
-            case 1: return "+10";
-            case 2: return "-10";
-            case 3: return "+25";
-            case 4: return "-25";
-            case 5: return "x2";
-            case 6: return "/2";
-            case 7: return "PERDISTE";
-            default: return "";
+            case 0: monedaManager.MultiplicarMonedas(3f); mensaje = "JACKPOT! x3"; break; // Verde
+            case 1: monedaManager.ModificarMonedas(10); mensaje = "+10 monedas"; break; // Rojo1
+            case 2: monedaManager.ModificarMonedas(-10); mensaje = "-10 monedas"; break; // Negro1
+            case 3: monedaManager.ModificarMonedas(25); mensaje = "+25 monedas"; break; // Rojo2
+            case 4: monedaManager.ModificarMonedas(-25); mensaje = "-25 monedas"; break; // Negro2
+            case 5: monedaManager.MultiplicarMonedas(2f); mensaje = "x2 monedas!"; break; // Rojo3
+            case 6: monedaManager.MultiplicarMonedas(0.5f); mensaje = "÷2 monedas"; break; // Negro3
+            case 7: monedaManager.SetMonedas(0); mensaje = "PERDISTE"; break; // Amarillo
         }
+
+        textoResultado.text = mensaje;
     }
 
     public void Salir()
@@ -123,7 +119,7 @@ public class GirarRuleta : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+        Application.Quit();
 #endif
     }
 }
